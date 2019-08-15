@@ -1,3 +1,5 @@
+![rspec-sorbet](https://user-images.githubusercontent.com/2643026/63100456-02c12c00-bf6f-11e9-8430-630a27bc6e42.png)
+
 # RSpec Sorbet
 
 A small gem consisting of helpers for using Sorbet & RSpec together.
