@@ -1,4 +1,4 @@
-UNRELEASED
+1.1.0
 
 * Add basic `instance_double` verification to help check the type of an instance double.
 
