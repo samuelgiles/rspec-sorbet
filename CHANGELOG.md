@@ -1,3 +1,7 @@
+UNRELEASED
+
+* Add basic `instance_double` verification to help check the type of an instance double.
+
 1.0.0
 
 * Initial release
