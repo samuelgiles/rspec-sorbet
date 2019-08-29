@@ -1,3 +1,7 @@
+1.2.0
+
+* Added support for verifying `T::Enumerable` types.
+
 1.1.0
 
 * Add basic `instance_double` verification to help check the type of an instance double.
