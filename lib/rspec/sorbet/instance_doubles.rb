@@ -66,7 +66,7 @@ module RSpec
           target = value.instance_variable_get(:@doubled_module).target
 
           case typing
-          when T::Types::TypedArray
+          when T::Types::TypedArray, T::Types::TypedEnumerable
             typing = typing.type
           end
 

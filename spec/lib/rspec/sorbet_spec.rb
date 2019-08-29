@@ -11,7 +11,7 @@ module RSpec
         extend T::Sig
 
         sig{params(forename: String, surname: String).void}
-        def initialize(forename)
+        def initialize(forename, surname)
           @forename = T.let(forename, String)
           @surname = T.let(surname, String)
         end
@@ -34,6 +34,11 @@ module RSpec
         def greet
           "Hello #{@person.full_name}"
         end
+
+        sig{params(others: T::Enumerable[Person])}
+        def greet_others(others)
+          "Hello #{@person.full_name}, #{others.map(&:full_name).join(', ')}"
+        end
       end
 
       let(:my_instance_double) { instance_double(String) }
@@ -43,6 +48,9 @@ module RSpec
       let(:my_person_double) do
         instance_double(Person, full_name: 'Steph Giles')
       end
+      let(:another_person) do
+        instance_double(Person, full_name: 'Yasmin Collins')
+      end
 
       specify do
         expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
@@ -50,10 +58,14 @@ module RSpec
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
+        expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
+          .to raise_error(TypeError)
         allow_instance_doubles!
         expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet }.not_to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
+        expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
+          .not_to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.not_to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(String, TrueClass)) }.not_to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
