@@ -60,7 +60,8 @@ module RSpec
       def call_validation_error_handler(_signature, opts)
         should_raise = true
 
-        if opts[:pretty_message].match?(INSTANCE_VERIFYING_DOUBLE_OR_INSTANCE_DOUBLE)
+        message = opts.fetch(:pretty_message, opts.fetch(:message, ''))
+        if message.match?(INSTANCE_VERIFYING_DOUBLE_OR_INSTANCE_DOUBLE)
           typing = opts[:type]
           value = opts[:value].is_a?(Array) ? opts[:value].first : opts[:value]
           target = value.instance_variable_get(:@doubled_module).target
