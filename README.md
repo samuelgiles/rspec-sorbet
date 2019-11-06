@@ -15,9 +15,9 @@ In your `spec_helper.rb` you need to first add a `require`:
 require 'rspec/sorbet'
 ```
 
-### Allowing Instance Doubles
+### Allowing Instance/Class/Object Doubles
 
-Out of the box if you're using `instance_double`'s in your tests you'll encounter errors such as the following:
+Out of the box if you're using `instance_double`, `class_double` or `object_double` in your tests you'll encounter errors such as the following:
 
 ```
  TypeError:
@@ -25,8 +25,8 @@ Out of the box if you're using `instance_double`'s in your tests you'll encounte
        Caller: /Users/samuelgiles/Documents/Projects/Clients/Bellroy/bellroy/spec/lib/checkout/use_cases/my_use_case.rb:9
 ```
 
-Drop the following into your `spec_helper.rb` to allow `instance_double` to be used without breaking type checking:
+Drop the following into your `spec_helper.rb` to allow doubles to be used without breaking type checking:
 
 ```ruby
-RSpec::Sorbet.allow_instance_doubles!
+RSpec::Sorbet.allow_doubles!
 ```

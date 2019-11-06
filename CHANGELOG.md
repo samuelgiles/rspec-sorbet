@@ -1,4 +1,9 @@
-UNRELEASED
+1.3.0
+
+* Added ability to allow any kind of double (Class, Instance, Object).
+* `RSpec::Sorbet.allow_instance_doubles!` has been renamed to `RSpec::Sorbet.allow_doubles!`, an alias remains for backwards compatibility for the time being.
+
+1.2.1
 
 * Fix call check when opts contains :message instead of :pretty_message.
 
