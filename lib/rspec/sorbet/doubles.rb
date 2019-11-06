@@ -4,8 +4,12 @@ require 'sorbet-runtime'
 
 module RSpec
   module Sorbet
-    module InstanceDoubles
+    module Doubles
       def allow_instance_doubles!
+        allow_doubles!
+      end
+
+      def allow_doubles!
         T::Configuration.inline_type_error_handler = proc do |error|
           inline_type_error_handler(error)
         end
@@ -17,16 +21,16 @@ module RSpec
 
       private
 
-      INLINE_INSTANCE_DOUBLE_REGEX =
-        /T.let: Expected type (T.any\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<InstanceDouble\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
+      INLINE_DOUBLE_REGEX =
+        /T.let: Expected type (T.any\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)Double\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
 
       def inline_type_error_handler(error)
         case error
         when TypeError
           message = error.message
-          return if instance_double_message_with_ellipsis?(message) || typed_array_message?(message)
+          return if double_message_with_ellipsis?(message) || typed_array_message?(message)
 
-          _, expected_types_string, doubled_module_string = (message.match(INLINE_INSTANCE_DOUBLE_REGEX) || [])[0..2]
+          _, expected_types_string, doubled_module_string = (message.match(INLINE_DOUBLE_REGEX) || [])[0..2]
           raise error unless expected_types_string && doubled_module_string
 
           expected_types = expected_types_string.split(',').map do |expected_type_string|
@@ -44,11 +48,11 @@ module RSpec
         end
       end
 
-      INSTANCE_VERIFYING_DOUBLE_OR_INSTANCE_DOUBLE =
-        /(RSpec::Mocks::InstanceVerifyingDouble|InstanceDouble)/.freeze
+      VERIFYING_DOUBLE_OR_DOUBLE =
+        /(RSpec::Mocks::(Instance|Class|Object)VerifyingDouble|(Instance|Class|Object)Double)/.freeze
 
-      def instance_double_message_with_ellipsis?(message)
-        message.include?('...') && message.match?(INSTANCE_VERIFYING_DOUBLE_OR_INSTANCE_DOUBLE)
+      def double_message_with_ellipsis?(message)
+        message.include?('...') && message.match?(VERIFYING_DOUBLE_OR_DOUBLE)
       end
 
       TYPED_ARRAY_MESSAGE = /got T::Array/.freeze
@@ -61,7 +65,7 @@ module RSpec
         should_raise = true
 
         message = opts.fetch(:pretty_message, opts.fetch(:message, ''))
-        if message.match?(INSTANCE_VERIFYING_DOUBLE_OR_INSTANCE_DOUBLE)
+        if message.match?(VERIFYING_DOUBLE_OR_DOUBLE)
           typing = opts[:type]
           value = opts[:value].is_a?(Array) ? opts[:value].first : opts[:value]
           target = value.instance_variable_get(:@doubled_module).target

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rspec/sorbet/instance_doubles'
+require 'rspec/sorbet/doubles'
 
 module RSpec
   module Sorbet
-    extend InstanceDoubles
+    extend Doubles
   end
 end
