@@ -18,6 +18,11 @@ module RSpec
         def full_name
           [@forename, @surname].join(' ')
         end
+
+        sig{returns(T.nilable(Person))}
+        def reversed
+          Person.new(@surname, @forename)
+        end
       end
 
       class Greeter
@@ -33,6 +38,11 @@ module RSpec
           "Hello #{@person.full_name}"
         end
 
+        sig{returns(T.nilable(Person))}
+        def reversed
+          T.let(@person.reversed, T.nilable(Person))
+        end
+
         sig{params(others: T::Enumerable[Person])}
         def greet_others(others)
           "Hello #{@person.full_name}, #{others.map(&:full_name).join(', ')}"
@@ -44,7 +54,7 @@ module RSpec
         Person.new('Sam', 'Giles')
       end
       let(:my_person_double) do
-        instance_double(Person, full_name: 'Steph Giles')
+        instance_double(Person, full_name: 'Steph Giles', reversed: another_person)
       end
       let(:another_person) do
         instance_double(Person, full_name: 'Yasmin Collins')
@@ -55,6 +65,7 @@ module RSpec
       specify do
         expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet }.to raise_error(TypeError)
+        expect { Greeter.new(my_person_double).reversed }.to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
@@ -63,6 +74,7 @@ module RSpec
         subject
         expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet }.not_to raise_error(TypeError)
+        expect { Greeter.new(my_person_double).reversed }.not_to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .not_to raise_error(TypeError)
