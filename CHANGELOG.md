@@ -1,3 +1,7 @@
+UNRELEASED
+
+* Added support for `T.let` referencing `T.nilable` types.
+
 1.3.0
 
 * Added ability to allow any kind of double (Class, Instance, Object).
