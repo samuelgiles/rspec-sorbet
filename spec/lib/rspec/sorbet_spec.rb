@@ -38,6 +38,11 @@ module RSpec
           "Hello #{@person.full_name}"
         end
 
+        sig{returns(Person)}
+        def person
+          T.cast(@person, Person)
+        end
+
         sig{returns(T.nilable(Person))}
         def reversed
           T.let(@person.reversed, T.nilable(Person))
@@ -66,6 +71,7 @@ module RSpec
         expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).reversed }.to raise_error(TypeError)
+        expect { Greeter.new(my_person_double).person }.to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
@@ -75,6 +81,7 @@ module RSpec
         expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet }.not_to raise_error(TypeError)
         expect { Greeter.new(my_person_double).reversed }.not_to raise_error(TypeError)
+        expect { Greeter.new(my_person_double).person }.not_to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .not_to raise_error(TypeError)
