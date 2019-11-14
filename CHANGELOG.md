@@ -1,3 +1,7 @@
+UNRELEASED
+
+* Added support for `T.cast`.
+
 1.4.0
 
 * Added support for `T.let` referencing `T.nilable` types.
