@@ -17,7 +17,7 @@ require 'rspec/sorbet'
 
 ### Allowing Instance/Class/Object Doubles
 
-Out of the box if you're using `instance_double`, `class_double` or `object_double` in your tests you'll encounter errors such as the following:
+Out of the box if you're using `instance_double`, `class_double` or `object_double` in your specs you'll encounter errors such as the following:
 
 ```
  TypeError:

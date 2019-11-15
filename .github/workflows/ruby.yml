@@ -17,15 +17,19 @@ jobs:
       run: |
         sudo apt-get install libsqlite3-dev
     - name: Cache Gems
-      id: cache-gems
       uses: actions/cache@v1
+      id: cache-gems
       with:
-        path: vendor/ruby
-        key: ${{ runner.os }}-gems
+        path: vendor/bundle
+        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile') }}
+        restore-keys: |
+          ${{ runner.os }}-gem-
     - name: Install Gems
       if: steps.cache-gems.outputs.cache-hit != 'true'
       run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3 --path=vendor/ruby
+        command -v bundler || gem install bundler
+        bundle install --jobs 4 --retry 3 --path=vendor/bundle
     - name: Build and test with RSpec
-      run: bundle exec rspec spec
+      run: |
+        command -v bundler || gem install bundler
+        bundle exec rspec spec
