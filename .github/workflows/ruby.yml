@@ -21,7 +21,7 @@ jobs:
       id: cache-gems
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile') }}
+        key: ${{ runner.os }}-gem-${{ hashFiles('**/*.gemspec') }}
         restore-keys: |
           ${{ runner.os }}-gem-
     - name: Install Gems
