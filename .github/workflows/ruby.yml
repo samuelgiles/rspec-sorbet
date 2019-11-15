@@ -13,8 +13,16 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.5.5
-    - name: Build and test with RSpec
+    - name: Cache Gems
+      id: cache-gems
+      uses: actions/cache@v1
+      with:
+        path: vendor/ruby
+        key: ${{ runner.os }}-gems
+    - name: Install Gems
+      if: steps.cache-gems.outputs.cache-hit != 'true'
       run: |
         gem install bundler
-        bundle install --jobs 4 --retry 3
-        bundle exec rspec spec
+        bundle install --jobs 4 --retry 3 --path=vendor/ruby
+    - name: Build and test with RSpec
+      run: bundle exec rspec spec
