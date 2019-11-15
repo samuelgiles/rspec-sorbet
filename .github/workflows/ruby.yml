@@ -26,10 +26,14 @@ jobs:
           ${{ runner.os }}-gem-
     - name: Install Gems
       if: steps.cache-gems.outputs.cache-hit != 'true'
+      env:
+        BUNDLE_BIN_PATH: vendor/bundle
       run: |
         command -v bundler || gem install bundler
         bundle install --jobs 4 --retry 3 --path=vendor/bundle
     - name: Build and test with RSpec
+      env:
+        BUNDLE_BIN_PATH: vendor/bundle
       run: |
         command -v bundler || gem install bundler
         bundle exec rspec spec
