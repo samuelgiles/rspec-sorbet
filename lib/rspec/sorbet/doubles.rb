@@ -5,10 +5,6 @@ require 'sorbet-runtime'
 module RSpec
   module Sorbet
     module Doubles
-      def allow_instance_doubles!
-        allow_doubles!
-      end
-
       def allow_doubles!
         T::Configuration.inline_type_error_handler = proc do |error|
           inline_type_error_handler(error)
@@ -18,6 +14,8 @@ module RSpec
           call_validation_error_handler(signature, opts)
         end
       end
+
+      alias_method :allow_instance_doubles!, :allow_doubles!
 
       private
 
