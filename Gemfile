@@ -11,8 +11,8 @@ group :development, :test do
   gem 'rb-readline'
   gem 'reek'
   gem 'rspec'
-  gem 'rubocop'
   gem 'rubocop-rspec'
+  gem 'rubocop'
   gem 'shoulda-matchers', require: false
   gem 'sqlite3'
   gem 'stackprof'
