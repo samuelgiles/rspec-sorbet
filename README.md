@@ -1,6 +1,6 @@
 ![rspec-sorbet](https://user-images.githubusercontent.com/2643026/63100456-02c12c00-bf6f-11e9-8430-630a27bc6e42.png)
 
-# RSpec Sorbet [![Gem Version](https://badge.fury.io/rb/rspec-sorbet.svg)](https://badge.fury.io/rb/rspec-sorbet) ![CI Badge](https://github.com/tricycle/rspec-sorbet/workflows/Ruby/badge.svg)
+# RSpec Sorbet [![Gem Version](https://badge.fury.io/rb/rspec-sorbet.svg)](https://badge.fury.io/rb/rspec-sorbet) ![CI Badge](https://github.com/tricycle/rspec-sorbet/workflows/RSpec%20Test%20Suite/badge.svg)
 
 A small gem consisting of helpers for using Sorbet & RSpec together.
 
