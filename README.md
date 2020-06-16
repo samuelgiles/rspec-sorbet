@@ -30,3 +30,7 @@ Drop the following into your `spec_helper.rb` to allow doubles to be used withou
 ```ruby
 RSpec::Sorbet.allow_doubles!
 ```
+
+### `eq` matcher usage with `T::Struct`'s
+
+Using the [`eq` matcher](https://www.rubydoc.info/github/rspec/rspec-expectations/RSpec%2FMatchers:eq) to compare [`T::Struct`'s](https://sorbet.org/docs/tstruct) might not behave as you'd expect whereby two separate instances of the same struct class with identical attributes are not `==` out of the box. The standalone [sorbet-struct-comparable](https://github.com/tricycle/sorbet-struct-comparable) gem may be of interest if you are looking for a simple attribute based comparison that will help make the `eq` matcher behave as you expect.
