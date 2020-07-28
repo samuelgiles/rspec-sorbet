@@ -1,3 +1,4 @@
+# typed: strict
 # frozen_string_literal: true
 
 if !ENV['METRICS'].nil? || !ENV['COVERAGE'].nil?
