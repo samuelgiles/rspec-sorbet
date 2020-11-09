@@ -48,7 +48,7 @@ module RSpec
       end
 
       VERIFYING_DOUBLE_OR_DOUBLE =
-        /(RSpec::Mocks::(Instance|Class|Object)VerifyingDouble|(Instance|Class|Object)Double)/.freeze
+        /(RSpec::Mocks::(Instance|Class|Object)VerifyingDouble|(Instance|Class|Object)?Double)/.freeze
 
       def double_message_with_ellipsis?(message)
         message.include?('...') && message.match?(VERIFYING_DOUBLE_OR_DOUBLE)
