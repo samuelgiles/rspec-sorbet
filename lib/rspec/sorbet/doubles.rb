@@ -67,7 +67,11 @@ module RSpec
         if message.match?(VERIFYING_DOUBLE_OR_DOUBLE)
           typing = opts[:type]
           value = opts[:value].is_a?(Array) ? opts[:value].first : opts[:value]
-          target = value.instance_variable_get(:@doubled_module).target
+          target = value.instance_variable_get(:@doubled_module)&.target
+
+          if target.nil?
+            return
+          end
 
           case typing
           when T::Types::TypedArray, T::Types::TypedEnumerable

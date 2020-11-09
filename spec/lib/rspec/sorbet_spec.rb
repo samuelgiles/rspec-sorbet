@@ -1,10 +1,13 @@
 # typed: ignore
 # frozen_string_literal: true
 
+require 'sorbet-runtime'
 require 'rspec/sorbet'
 
 module RSpec
   describe Sorbet do
+    extend T::Sig
+
     shared_context 'instance double' do
       class Person
         extend T::Sig
@@ -130,6 +133,21 @@ module RSpec
           expect { T.let(my_object_double, String) }.to raise_error(TypeError)
           subject
           expect { T.let(my_object_double, String) }.not_to raise_error(TypeError)
+        end
+      end
+
+      describe 'doubles' do
+        let(:my_double) { double('name') }
+
+        sig { params(p: String).void }
+        def f(p)
+          expect(p).to_not be nil
+        end
+
+        it 'works with methods' do
+          expect { f(my_double) }.to raise_error(TypeError)
+          subject
+          expect { f(my_double) }.not_to raise_error(TypeError)
         end
       end
     end
