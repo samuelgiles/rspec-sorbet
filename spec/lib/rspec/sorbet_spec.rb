@@ -149,6 +149,12 @@ module RSpec
           subject
           expect { f(my_double) }.not_to raise_error(TypeError)
         end
+
+        specify do
+          expect { T.let(my_double, String) }.to raise_error(TypeError)
+          subject
+          expect { T.let(my_double, String) }.not_to raise_error(TypeError)
+        end
       end
     end
   end

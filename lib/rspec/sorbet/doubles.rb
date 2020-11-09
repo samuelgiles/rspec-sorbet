@@ -21,13 +21,18 @@ module RSpec
       private
 
       INLINE_DOUBLE_REGEX =
-        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)Double\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
+        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)?Double\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
+
+      SIMPLE_DOUBLE_REGEX =
+        /T.(let|cast): Expected type (.*), got type RSpec::Mocks::Double with value #<?Double (.*)>/.freeze
 
       def inline_type_error_handler(error)
         case error
         when TypeError
           message = error.message
           return if double_message_with_ellipsis?(message) || typed_array_message?(message)
+
+          return if message.match(SIMPLE_DOUBLE_REGEX)
 
           _, expected_types_string, doubled_module_string = (message.match(INLINE_DOUBLE_REGEX) || [])[0..2]
           raise error unless expected_types_string && doubled_module_string
@@ -40,7 +45,6 @@ module RSpec
           valid = expected_types.any? do |expected_type|
             doubled_module.ancestors.include?(expected_type)
           end
-
           raise error unless valid
         else
           raise error
