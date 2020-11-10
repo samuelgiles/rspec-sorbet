@@ -21,7 +21,7 @@ module RSpec
       private
 
       INLINE_DOUBLE_REGEX =
-        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)?Double\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
+        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)Double\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
 
       SIMPLE_DOUBLE_REGEX =
         /T.(let|cast): Expected type (.*), got type RSpec::Mocks::Double with value #<?Double (.*)>/.freeze
