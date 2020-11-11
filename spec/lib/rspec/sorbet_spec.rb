@@ -76,6 +76,7 @@ module RSpec
         expect { Greeter.new(my_person_double).person }.to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.to raise_error(TypeError)
+        expect { T.let([my_instance_double], T::Array[String]) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .to raise_error(TypeError)
@@ -88,6 +89,7 @@ module RSpec
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .not_to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.not_to raise_error(TypeError)
+        expect { T.let([my_instance_double], T::Array[String]) }.not_to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(String, TrueClass)) }.not_to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(Integer, Numeric)) }.to raise_error(TypeError)
