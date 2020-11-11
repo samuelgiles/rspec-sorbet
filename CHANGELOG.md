@@ -1,3 +1,7 @@
+1.6.0
+
+* Non-verifying double support improved.
+
 1.5.0
 
 * Added support for `T.cast`.
