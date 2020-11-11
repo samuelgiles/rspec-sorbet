@@ -6,8 +6,6 @@ require 'rspec/sorbet'
 
 module RSpec
   describe Sorbet do
-    extend T::Sig
-
     shared_context 'instance double' do
       class Person
         extend T::Sig
@@ -139,15 +137,19 @@ module RSpec
       describe 'doubles' do
         let(:my_double) { double('name') }
 
-        sig { params(p: String).void }
-        def f(p)
-          expect(p).to_not be nil
+        class DoubleMethodArgument
+          extend T::Sig
+
+          sig { params(message: String).void }
+          def initialize(message)
+            @message = message
+          end
         end
 
         it 'allows test doubles as method arguments' do
-          expect { f(my_double) }.to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_double) }.to raise_error(TypeError)
           subject
-          expect { f(my_double) }.not_to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_double) }.not_to raise_error(TypeError)
         end
 
         specify do
