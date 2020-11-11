@@ -144,7 +144,7 @@ module RSpec
           expect(p).to_not be nil
         end
 
-        it 'works with methods' do
+        it 'allows test doubles as method arguments' do
           expect { f(my_double) }.to raise_error(TypeError)
           subject
           expect { f(my_double) }.not_to raise_error(TypeError)
