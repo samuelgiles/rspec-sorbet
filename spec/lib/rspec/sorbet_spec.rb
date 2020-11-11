@@ -1,6 +1,7 @@
 # typed: ignore
 # frozen_string_literal: true
 
+require 'sorbet-runtime'
 require 'rspec/sorbet'
 
 module RSpec
@@ -130,6 +131,31 @@ module RSpec
           expect { T.let(my_object_double, String) }.to raise_error(TypeError)
           subject
           expect { T.let(my_object_double, String) }.not_to raise_error(TypeError)
+        end
+      end
+
+      describe 'doubles' do
+        let(:my_double) { double('name') }
+
+        class DoubleMethodArgument
+          extend T::Sig
+
+          sig { params(message: String).void }
+          def initialize(message)
+            @message = message
+          end
+        end
+
+        it 'allows test doubles as method arguments' do
+          expect { DoubleMethodArgument.new(my_double) }.to raise_error(TypeError)
+          subject
+          expect { DoubleMethodArgument.new(my_double) }.not_to raise_error(TypeError)
+        end
+
+        specify do
+          expect { T.let(my_double, String) }.to raise_error(TypeError)
+          subject
+          expect { T.let(my_double, String) }.not_to raise_error(TypeError)
         end
       end
     end

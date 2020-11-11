@@ -27,7 +27,7 @@ module RSpec
         case error
         when TypeError
           message = error.message
-          return if double_message_with_ellipsis?(message) || typed_array_message?(message)
+          return if unable_to_check_type_for_message?(message)
 
           _, expected_types_string, doubled_module_string = (message.match(INLINE_DOUBLE_REGEX) || [])[0..2]
           raise error unless expected_types_string && doubled_module_string
@@ -40,15 +40,20 @@ module RSpec
           valid = expected_types.any? do |expected_type|
             doubled_module.ancestors.include?(expected_type)
           end
-
           raise error unless valid
         else
           raise error
         end
       end
 
+      def unable_to_check_type_for_message?(message)
+        message_indicates_non_verifying_double?(message) ||
+          double_message_with_ellipsis?(message) ||
+            typed_array_message?(message)
+      end
+
       VERIFYING_DOUBLE_OR_DOUBLE =
-        /(RSpec::Mocks::(Instance|Class|Object)VerifyingDouble|(Instance|Class|Object)Double)/.freeze
+        /(RSpec::Mocks::(Instance|Class|Object)VerifyingDouble|(Instance|Class|Object)?Double)/.freeze
 
       def double_message_with_ellipsis?(message)
         message.include?('...') && message.match?(VERIFYING_DOUBLE_OR_DOUBLE)
@@ -60,6 +65,13 @@ module RSpec
         message.match?(TYPED_ARRAY_MESSAGE)
       end
 
+      NON_VERIFYING_DOUBLE_REGEX =
+        /got type RSpec::Mocks::Double with value #<?Double (.*)>/.freeze
+
+      def message_indicates_non_verifying_double?(message)
+        message.match(NON_VERIFYING_DOUBLE_REGEX)
+      end
+
       def call_validation_error_handler(_signature, opts)
         should_raise = true
 
@@ -67,7 +79,9 @@ module RSpec
         if message.match?(VERIFYING_DOUBLE_OR_DOUBLE)
           typing = opts[:type]
           value = opts[:value].is_a?(Array) ? opts[:value].first : opts[:value]
-          target = value.instance_variable_get(:@doubled_module).target
+          target = value.instance_variable_get(:@doubled_module)&.target
+
+          return if target.nil?
 
           case typing
           when T::Types::TypedArray, T::Types::TypedEnumerable
