@@ -21,7 +21,7 @@ module RSpec
       private
 
       INLINE_DOUBLE_REGEX =
-        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)Double\((?<doubled_module>[a-zA-Z:: ,]*)\)/.freeze
+        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)?Double([\(]|[ ])(?<doubled_module>[a-zA-Z:: ,]*)(\))?/.freeze
 
       def inline_type_error_handler(error)
         case error
@@ -30,6 +30,8 @@ module RSpec
           return if unable_to_check_type_for_message?(message)
 
           _, expected_types_string, doubled_module_string = (message.match(INLINE_DOUBLE_REGEX) || [])[0..2]
+          return unless doubled_module_string
+
           raise error unless expected_types_string && doubled_module_string
 
           expected_types = expected_types_string.split(',').map do |expected_type_string|
@@ -47,9 +49,8 @@ module RSpec
       end
 
       def unable_to_check_type_for_message?(message)
-        message_indicates_non_verifying_double?(message) ||
-          double_message_with_ellipsis?(message) ||
-            typed_array_message?(message)
+        double_message_with_ellipsis?(message) ||
+          typed_array_message?(message)
       end
 
       VERIFYING_DOUBLE_OR_DOUBLE =
@@ -63,13 +64,6 @@ module RSpec
 
       def typed_array_message?(message)
         message.match?(TYPED_ARRAY_MESSAGE)
-      end
-
-      NON_VERIFYING_DOUBLE_REGEX =
-        /got type RSpec::Mocks::Double with value #<?Double (.*)>/.freeze
-
-      def message_indicates_non_verifying_double?(message)
-        message.match(NON_VERIFYING_DOUBLE_REGEX)
       end
 
       def call_validation_error_handler(_signature, opts)

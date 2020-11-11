@@ -136,6 +136,7 @@ module RSpec
 
       describe 'doubles' do
         let(:my_double) { double('name') }
+        let(:my_non_verifying_double) { double(DoubleMethodArgument) }
 
         class DoubleMethodArgument
           extend T::Sig
@@ -148,14 +149,20 @@ module RSpec
 
         it 'allows test doubles as method arguments' do
           expect { DoubleMethodArgument.new(my_double) }.to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_non_verifying_double) }.to raise_error(TypeError)
           subject
           expect { DoubleMethodArgument.new(my_double) }.not_to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_non_verifying_double) }.not_to raise_error(TypeError)
         end
 
         specify do
           expect { T.let(my_double, String) }.to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, String) }.to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.to raise_error(TypeError)
           subject
           expect { T.let(my_double, String) }.not_to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, String) }.to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.not_to raise_error(TypeError)
         end
       end
     end
