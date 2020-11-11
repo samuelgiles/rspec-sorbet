@@ -76,7 +76,6 @@ module RSpec
         expect { Greeter.new(my_person_double).person }.to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.to raise_error(TypeError)
-        expect { T.let([my_instance_double], T::Array[String]) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .to raise_error(TypeError)
@@ -89,7 +88,6 @@ module RSpec
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .not_to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.not_to raise_error(TypeError)
-        expect { T.let([my_instance_double], T::Array[String]) }.not_to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(String, TrueClass)) }.not_to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(Integer, Numeric)) }.to raise_error(TypeError)
@@ -138,6 +136,7 @@ module RSpec
 
       describe 'doubles' do
         let(:my_double) { double('name') }
+        let(:my_non_verifying_double) { double(DoubleMethodArgument) }
 
         class DoubleMethodArgument
           extend T::Sig
@@ -150,14 +149,20 @@ module RSpec
 
         it 'allows test doubles as method arguments' do
           expect { DoubleMethodArgument.new(my_double) }.to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_non_verifying_double) }.to raise_error(TypeError)
           subject
           expect { DoubleMethodArgument.new(my_double) }.not_to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_non_verifying_double) }.not_to raise_error(TypeError)
         end
 
         specify do
           expect { T.let(my_double, String) }.to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, String) }.to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.to raise_error(TypeError)
           subject
           expect { T.let(my_double, String) }.not_to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, String) }.to raise_error(TypeError)
+          expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.not_to raise_error(TypeError)
         end
       end
     end
