@@ -18,7 +18,7 @@ jobs:
     - name: Install Linux dependencies
       run: sudo apt-get update -qq && sudo apt-get install -y libsqlite3-dev
     - name: Set up Ruby
-      uses: actions/setup-ruby@v1.1.1
+      uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.6
     - name: Cache gems
