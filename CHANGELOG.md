@@ -1,3 +1,7 @@
+1.7.0
+
+* Added support `T.class_of`.
+
 1.6.0
 
 * Non-verifying double support improved.
