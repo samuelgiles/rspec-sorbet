@@ -115,12 +115,40 @@ module RSpec
       end
 
       describe 'class doubles' do
-        let(:my_class_double) { class_double(String) }
+        extend T::Sig
 
-        specify do
-          expect { T.let(my_class_double, String) }.to raise_error(TypeError)
+        class Rectangle; end
+        class Square < Rectangle; end
+        class Triangle; end
+
+        sig{params(klass: T.class_of(Rectangle)).void}
+        def rectangular_class?(klass); end
+
+        specify 'inline types' do
+          expect { T.let(Rectangle, Rectangle) }.to raise_error(TypeError)
+          expect { T.let(class_double(Rectangle), Rectangle) }.to raise_error(TypeError)
+          expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error(TypeError)
+          expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.to raise_error(TypeError)
           subject
-          expect { T.let(my_class_double, String) }.not_to raise_error(TypeError)
+          expect { T.let(Rectangle, Rectangle) }.to raise_error(TypeError)
+          expect { T.let(class_double(Rectangle), Rectangle) }.to raise_error(TypeError)
+          expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error(TypeError)
+          expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.not_to raise_error(TypeError)
+        end
+
+        specify 'method signatures' do
+          expect { rectangular_class?(class_double(Rectangle)) }.to raise_error(TypeError)
+          expect { rectangular_class?(Rectangle) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(class_double(Square)) }.to raise_error(TypeError)
+          expect { rectangular_class?(Square) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(Triangle) }.to raise_error(TypeError)
+          expect { rectangular_class?(class_double(Triangle)) }.to raise_error(TypeError)
+          subject
+          expect { rectangular_class?(class_double(Rectangle)) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(Rectangle) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(class_double(Square)) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(Square) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(class_double(Triangle)) }.to raise_error(TypeError)
         end
       end
 

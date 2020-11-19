@@ -21,7 +21,7 @@ module RSpec
       private
 
       INLINE_DOUBLE_REGEX =
-        /T.(let|cast): Expected type (T.(any|nilable)\()?(?<expected_classes>[a-zA-Z:: ,]*)(\))?, got type (.*) with value #<(Instance|Class|Object)?Double([\(]|[ ])(?<doubled_module>[a-zA-Z:: ,]*)(\))?/.freeze
+        /T.(?:let|cast): Expected type (?:T.(?<t_method>any|nilable|class_of)\()?(?<expected_types>[a-zA-Z:: ,]*)(\))?, got (?:type .* with value )?#<(?<double_type>Instance|Class|Object)?Double([\(]|[ ])(?<doubled_type>[a-zA-Z:: ,]*)(\))?/.freeze
 
       def inline_type_error_handler(error)
         case error
@@ -29,18 +29,26 @@ module RSpec
           message = error.message
           return if unable_to_check_type_for_message?(message)
 
-          _, expected_types_string, doubled_module_string = (message.match(INLINE_DOUBLE_REGEX) || [])[0..2]
-          return unless doubled_module_string
+          raise error unless (match = message.match(INLINE_DOUBLE_REGEX))
 
-          raise error unless expected_types_string && doubled_module_string
-
-          expected_types = expected_types_string.split(',').map do |expected_type_string|
-            Object.const_get(expected_type_string.strip)
+          t_method = match[:t_method]
+          expected_types = match[:expected_types].split(',').map do |expected_type|
+            Object.const_get(expected_type.strip)
           end
-          doubled_module = Object.const_get(doubled_module_string)
+          double_type = match[:double_type]
+          doubled_type = Object.const_get(match[:doubled_type])
+
+          if double_type == 'Class'
+            raise error if t_method != 'class_of'
+
+            valid = expected_types.any? do |expected_type|
+              doubled_type <= expected_type
+            end
+            raise error unless valid
+          end
 
           valid = expected_types.any? do |expected_type|
-            doubled_module.ancestors.include?(expected_type)
+            doubled_type.ancestors.include?(expected_type)
           end
           raise error unless valid
         else
@@ -83,6 +91,8 @@ module RSpec
           end
 
           case typing
+          when T::Types::ClassOf
+            should_raise = !(target <= typing.type)
           when T::Types::Simple
             should_raise = !target.ancestors.include?(typing.raw_type)
           when T::Types::Union
