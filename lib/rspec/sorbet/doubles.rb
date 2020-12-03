@@ -36,6 +36,7 @@ module RSpec
             Object.const_get(expected_type.strip)
           end
           double_type = match[:double_type]
+          return if double_type.nil?
           doubled_type = Object.const_get(match[:doubled_type])
 
           if double_type == 'Class'
