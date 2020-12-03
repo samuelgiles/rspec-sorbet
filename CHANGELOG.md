@@ -1,3 +1,7 @@
+1.8.0
+
+* Fixed issues around union types referencing typed enumerables.
+
 1.7.0
 
 * Added support `T.class_of`.
