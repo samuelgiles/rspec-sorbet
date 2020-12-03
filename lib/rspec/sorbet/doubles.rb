@@ -96,8 +96,10 @@ module RSpec
           when T::Types::Simple
             should_raise = !target.ancestors.include?(typing.raw_type)
           when T::Types::Union
-            valid = typing.types.map(&:raw_type).any? do |type|
-              target.ancestors.include?(type)
+            valid = typing.types.any? do |type|
+              next false unless type.respond_to?(:raw_type)
+
+              target.ancestors.include?(type.raw_type)
             end
             should_raise = !valid
           else
