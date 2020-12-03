@@ -25,6 +25,11 @@ module RSpec
         def reversed
           Person.new(@surname, @forename)
         end
+
+        sig{params(person: T.any(String, Person, T::Array[String])).returns(T.any(String, Person, T::Array[String]))}
+        def self.person?(person)
+          person
+        end
       end
 
       class Greeter
@@ -50,7 +55,7 @@ module RSpec
           T.let(@person.reversed, T.nilable(Person))
         end
 
-        sig{params(others: T::Enumerable[Person])}
+        sig{params(others: T::Enumerable[Person]).void}
         def greet_others(others)
           "Hello #{@person.full_name}, #{others.map(&:full_name).join(', ')}"
         end
@@ -70,25 +75,27 @@ module RSpec
 
     shared_examples 'it allows an instance double' do
       specify do
-        expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
+        expect { Greeter.new(my_person).greet }.not_to raise_error
         expect { Greeter.new(my_person_double).greet }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).reversed }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).person }.to raise_error(TypeError)
+        expect { Person.person?(my_person_double) }.to raise_error(TypeError)
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { T.let(my_instance_double, String) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .to raise_error(TypeError)
         subject
-        expect { Greeter.new(my_person).greet }.not_to raise_error(TypeError)
-        expect { Greeter.new(my_person_double).greet }.not_to raise_error(TypeError)
-        expect { Greeter.new(my_person_double).reversed }.not_to raise_error(TypeError)
-        expect { Greeter.new(my_person_double).person }.not_to raise_error(TypeError)
+        expect { Greeter.new(my_person).greet }.not_to raise_error
+        expect { Greeter.new(my_person_double).greet }.not_to raise_error
+        expect { Greeter.new(my_person_double).reversed }.not_to raise_error
+        expect { Greeter.new(my_person_double).person }.not_to raise_error
+        expect { Person.person?(my_person_double) }.not_to raise_error
         expect { Greeter.new('Hello').greet }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
-          .not_to raise_error(TypeError)
-        expect { T.let(my_instance_double, String) }.not_to raise_error(TypeError)
-        expect { T.let(my_instance_double, T.any(String, TrueClass)) }.not_to raise_error(TypeError)
+          .not_to raise_error
+        expect { T.let(my_instance_double, String) }.not_to raise_error
+        expect { T.let(my_instance_double, T.any(String, TrueClass)) }.not_to raise_error
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(Integer, Numeric)) }.to raise_error(TypeError)
       end
@@ -127,27 +134,27 @@ module RSpec
         specify 'inline types' do
           expect { T.let(Rectangle, Rectangle) }.to raise_error(TypeError)
           expect { T.let(class_double(Rectangle), Rectangle) }.to raise_error(TypeError)
-          expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error(TypeError)
+          expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error
           expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.to raise_error(TypeError)
           subject
           expect { T.let(Rectangle, Rectangle) }.to raise_error(TypeError)
           expect { T.let(class_double(Rectangle), Rectangle) }.to raise_error(TypeError)
-          expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error(TypeError)
-          expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.not_to raise_error(TypeError)
+          expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error
+          expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.not_to raise_error
         end
 
         specify 'method signatures' do
           expect { rectangular_class?(class_double(Rectangle)) }.to raise_error(TypeError)
-          expect { rectangular_class?(Rectangle) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(Rectangle) }.not_to raise_error
           expect { rectangular_class?(class_double(Square)) }.to raise_error(TypeError)
-          expect { rectangular_class?(Square) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(Square) }.not_to raise_error
           expect { rectangular_class?(Triangle) }.to raise_error(TypeError)
           expect { rectangular_class?(class_double(Triangle)) }.to raise_error(TypeError)
           subject
-          expect { rectangular_class?(class_double(Rectangle)) }.not_to raise_error(TypeError)
-          expect { rectangular_class?(Rectangle) }.not_to raise_error(TypeError)
-          expect { rectangular_class?(class_double(Square)) }.not_to raise_error(TypeError)
-          expect { rectangular_class?(Square) }.not_to raise_error(TypeError)
+          expect { rectangular_class?(class_double(Rectangle)) }.not_to raise_error
+          expect { rectangular_class?(Rectangle) }.not_to raise_error
+          expect { rectangular_class?(class_double(Square)) }.not_to raise_error
+          expect { rectangular_class?(Square) }.not_to raise_error
           expect { rectangular_class?(class_double(Triangle)) }.to raise_error(TypeError)
         end
       end
@@ -158,7 +165,7 @@ module RSpec
         specify do
           expect { T.let(my_object_double, String) }.to raise_error(TypeError)
           subject
-          expect { T.let(my_object_double, String) }.not_to raise_error(TypeError)
+          expect { T.let(my_object_double, String) }.not_to raise_error
         end
       end
 
@@ -179,8 +186,8 @@ module RSpec
           expect { DoubleMethodArgument.new(my_double) }.to raise_error(TypeError)
           expect { DoubleMethodArgument.new(my_non_verifying_double) }.to raise_error(TypeError)
           subject
-          expect { DoubleMethodArgument.new(my_double) }.not_to raise_error(TypeError)
-          expect { DoubleMethodArgument.new(my_non_verifying_double) }.not_to raise_error(TypeError)
+          expect { DoubleMethodArgument.new(my_double) }.not_to raise_error
+          expect { DoubleMethodArgument.new(my_non_verifying_double) }.not_to raise_error
         end
 
         specify do
@@ -188,9 +195,9 @@ module RSpec
           expect { T.let(my_non_verifying_double, String) }.to raise_error(TypeError)
           expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.to raise_error(TypeError)
           subject
-          expect { T.let(my_double, String) }.not_to raise_error(TypeError)
-          expect { T.let(my_non_verifying_double, String) }.to raise_error(TypeError)
-          expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.not_to raise_error(TypeError)
+          expect { T.let(my_double, String) }.not_to raise_error
+          expect { T.let(my_non_verifying_double, String) }.not_to raise_error
+          expect { T.let(my_non_verifying_double, DoubleMethodArgument) }.not_to raise_error
         end
       end
     end

@@ -36,6 +36,7 @@ module RSpec
             Object.const_get(expected_type.strip)
           end
           double_type = match[:double_type]
+          return if double_type.nil?
           doubled_type = Object.const_get(match[:doubled_type])
 
           if double_type == 'Class'
@@ -96,8 +97,10 @@ module RSpec
           when T::Types::Simple
             should_raise = !target.ancestors.include?(typing.raw_type)
           when T::Types::Union
-            valid = typing.types.map(&:raw_type).any? do |type|
-              target.ancestors.include?(type)
+            valid = typing.types.any? do |type|
+              next false unless type.respond_to?(:raw_type)
+
+              target.ancestors.include?(type.raw_type)
             end
             should_raise = !valid
           else
