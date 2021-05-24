@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ffaker/all/ffaker.rbi
 #
-# ffaker-2.16.0
+# ffaker-2.18.0
 
 module FFaker
   def self.bothify(masks); end

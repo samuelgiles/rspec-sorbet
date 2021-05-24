@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/guard/all/guard.rbi
 #
-# guard-2.16.2
+# guard-2.17.0
 
 module Guard
   def self._evaluate(options); end

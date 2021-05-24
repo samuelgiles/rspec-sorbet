@@ -7,11 +7,14 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/unicode-display_width/all/unicode-display_width.rbi
 #
-# unicode-display_width-1.7.0
+# unicode-display_width-2.0.0
 
 module Unicode
 end
-module Unicode::DisplayWidth
+class Unicode::DisplayWidth
+  def get_config(**kwargs); end
+  def initialize(ambiguous: nil, overwrite: nil, emoji: nil); end
+  def of(string, **kwargs); end
   def self.emoji_extra_width_of(string, ambiguous = nil, overwrite = nil, _ = nil); end
   def self.of(string, ambiguous = nil, overwrite = nil, options = nil); end
 end
