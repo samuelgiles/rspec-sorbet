@@ -11,9 +11,8 @@ group :development, :test do
   gem 'rspec'
   gem 'rubocop-rspec'
   gem 'rubocop'
-  gem 'sqlite3'
   gem 'stackprof'
-  gem 'timecop'
+  gem 'tapioca'
 end
 
 group :test do
