@@ -1,3 +1,7 @@
+1.8.1
+
+* [BUGFIX] Fix processing T.let type mismatch messages when there are digits in module name
+
 1.8.0
 
 * Fixed issues around union types referencing typed enumerables.
