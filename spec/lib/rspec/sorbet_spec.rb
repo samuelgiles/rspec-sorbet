@@ -61,6 +61,10 @@ module RSpec
         end
       end
 
+      module M123
+        class Animal; end
+      end
+      
       let(:my_instance_double) { instance_double(String) }
       let(:my_person) do
         Person.new('Sam', 'Giles')
@@ -70,6 +74,9 @@ module RSpec
       end
       let(:another_person) do
         instance_double(Person, full_name: 'Yasmin Collins')
+      end
+      let(:my_animal_double) do
+        instance_double(M123::Animal)
       end
     end
 
@@ -85,6 +92,8 @@ module RSpec
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { Greeter.new(my_person_double).greet_others([my_person_double, another_person]) }
           .to raise_error(TypeError)
+        expect { T.let(my_animal_double, M123::Animal) }.to raise_error
+
         subject
         expect { Greeter.new(my_person).greet }.not_to raise_error
         expect { Greeter.new(my_person_double).greet }.not_to raise_error
@@ -98,6 +107,7 @@ module RSpec
         expect { T.let(my_instance_double, T.any(String, TrueClass)) }.not_to raise_error
         expect { T.let(my_instance_double, Integer) }.to raise_error(TypeError)
         expect { T.let(my_instance_double, T.any(Integer, Numeric)) }.to raise_error(TypeError)
+        expect { T.let(my_animal_double, M123::Animal) }.not_to raise_error
       end
     end
 

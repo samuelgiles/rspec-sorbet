@@ -21,7 +21,7 @@ module RSpec
       private
 
       INLINE_DOUBLE_REGEX =
-        /T.(?:let|cast): Expected type (?:T.(?<t_method>any|nilable|class_of)\()?(?<expected_types>[a-zA-Z:: ,]*)(\))?, got (?:type .* with value )?#<(?<double_type>Instance|Class|Object)?Double([\(]|[ ])(?<doubled_type>[a-zA-Z:: ,]*)(\))?/.freeze
+        /T.(?:let|cast): Expected type (?:T.(?<t_method>any|nilable|class_of)\()?(?<expected_types>[a-zA-Z0-9:: ,]*)(\))?, got (?:type .* with value )?#<(?<double_type>Instance|Class|Object)?Double([\(]|[ ])(?<doubled_type>[a-zA-Z0-9:: ,]*)(\))?/.freeze
 
       def inline_type_error_handler(error)
         case error
