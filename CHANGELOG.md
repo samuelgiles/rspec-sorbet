@@ -1,3 +1,7 @@
+1.8.2
+
+* Reduce gem size by excluding RBIs from gem build
+
 1.8.1
 
 * [BUGFIX] Fix processing T.let type mismatch messages when there are digits in module name
