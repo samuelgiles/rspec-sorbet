@@ -1,3 +1,7 @@
+1.8.3
+
+* Make sorbet a development dependency
+
 1.8.2
 
 * Reduce gem size by excluding RBIs from gem build
