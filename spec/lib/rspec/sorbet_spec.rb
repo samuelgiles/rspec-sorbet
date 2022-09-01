@@ -131,6 +131,33 @@ module RSpec
         it_should_behave_like 'it allows an instance double'
       end
 
+      describe 'with an existing error handler' do
+        let(:handler) { proc {|_,_| } }
+
+        before do
+          T::Configuration.call_validation_error_handler  = handler
+          described_class.allow_doubles!
+        end
+
+
+        class PassthroughSig
+          extend T::Sig
+
+          sig { params(message: String).void }
+          def initialize(message)
+            @message = message
+          end
+        end
+
+        specify do
+          expect(handler).to receive(:call)
+         
+          # Error is not rasied becasue handler is no-op
+          expect { PassthroughSig.new(123) }.not_to raise_error
+        end
+
+      end
+
       describe 'class doubles' do
         extend T::Sig
 

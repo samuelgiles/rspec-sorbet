@@ -11,6 +11,8 @@ module RSpec
           inline_type_error_handler(error)
         end
 
+        @existing_handler = T::Configuration.instance_variable_get(:@call_validation_error_handler)
+
         T::Configuration.call_validation_error_handler = proc do |signature, opts|
           call_validation_error_handler(signature, opts)
         end
@@ -22,6 +24,13 @@ module RSpec
 
       INLINE_DOUBLE_REGEX =
         /T.(?:let|cast): Expected type (?:T.(?<t_method>any|nilable|class_of)\()?(?<expected_types>[a-zA-Z0-9:: ,]*)(\))?, got (?:type .* with value )?#<(?<double_type>Instance|Class|Object)?Double([\(]|[ ])(?<doubled_type>[a-zA-Z0-9:: ,]*)(\))?/.freeze
+
+
+      def handle_call_validation_error(signature, opts)
+        raise TypeError, opts[:pretty_message] unless @existing_handler 
+
+        @existing_handler.call(signature, opts)
+      end
 
       def inline_type_error_handler(error)
         case error
@@ -75,7 +84,7 @@ module RSpec
         message.match?(TYPED_ARRAY_MESSAGE)
       end
 
-      def call_validation_error_handler(_signature, opts)
+      def call_validation_error_handler(signature, opts)
         should_raise = true
 
         message = opts.fetch(:pretty_message, opts.fetch(:message, ''))
@@ -108,7 +117,7 @@ module RSpec
           end
         end
 
-        raise TypeError, opts[:pretty_message] if should_raise
+        handle_call_validation_error(signature, opts) if should_raise
       end
     end
   end
