@@ -132,7 +132,7 @@ module RSpec
       end
 
       describe 'with an existing error handler' do
-        let(:handler) { proc {|_,_| } }
+        let(:handler) { proc {|_,_| raise ArgumentError, 'foo'} }
 
         before do
           T::Configuration.call_validation_error_handler  = handler
@@ -150,10 +150,8 @@ module RSpec
         end
 
         specify do
-          expect(handler).to receive(:call)
-         
           # Error is not rasied becasue handler is no-op
-          expect { PassthroughSig.new(123) }.not_to raise_error
+          expect { PassthroughSig.new(123) }.to raise_error ArgumentError, 'foo'
         end
 
       end
