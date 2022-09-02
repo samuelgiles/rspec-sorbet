@@ -150,7 +150,7 @@ module RSpec
         end
 
         specify do
-          # Error is not rasied becasue handler is no-op
+          # Checking to ensure the invalid calls rasies the error in the custom handler
           expect { PassthroughSig.new(123) }.to raise_error ArgumentError, 'foo'
         end
 
