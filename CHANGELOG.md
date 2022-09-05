@@ -1,6 +1,6 @@
 1.9.0
 
-* Allow specification of a custom validation handler
+* Allow specification of a custom validation handler (thanks [@bmalinconico](https://github.com/bmalinconico))
 
 1.8.3
 
