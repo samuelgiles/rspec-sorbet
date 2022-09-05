@@ -64,7 +64,7 @@ module RSpec
       module M123
         class Animal; end
       end
-      
+
       let(:my_instance_double) { instance_double(String) }
       let(:my_person) do
         Person.new('Sam', 'Giles')
@@ -129,6 +129,31 @@ module RSpec
       describe 'instance doubles' do
         include_context 'instance double'
         it_should_behave_like 'it allows an instance double'
+      end
+
+      describe 'with an existing error handler' do
+        let(:handler) { proc {|_,_| raise ArgumentError, 'foo'} }
+
+        before do
+          T::Configuration.call_validation_error_handler  = handler
+          described_class.allow_doubles!
+        end
+
+
+        class PassthroughSig
+          extend T::Sig
+
+          sig { params(message: String).void }
+          def initialize(message)
+            @message = message
+          end
+        end
+
+        specify do
+          # Checking to ensure the invalid calls raises the error in the custom handler
+          expect { PassthroughSig.new(123) }.to raise_error ArgumentError, 'foo'
+        end
+
       end
 
       describe 'class doubles' do
