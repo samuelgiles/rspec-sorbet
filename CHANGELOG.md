@@ -1,3 +1,7 @@
+1.9.0
+
+* Allow specification of a custom validation handler
+
 1.8.3
 
 * Make sorbet a development dependency

@@ -64,7 +64,7 @@ module RSpec
       module M123
         class Animal; end
       end
-      
+
       let(:my_instance_double) { instance_double(String) }
       let(:my_person) do
         Person.new('Sam', 'Giles')
@@ -150,7 +150,7 @@ module RSpec
         end
 
         specify do
-          # Checking to ensure the invalid calls rasies the error in the custom handler
+          # Checking to ensure the invalid calls raises the error in the custom handler
           expect { PassthroughSig.new(123) }.to raise_error ArgumentError, 'foo'
         end
 
