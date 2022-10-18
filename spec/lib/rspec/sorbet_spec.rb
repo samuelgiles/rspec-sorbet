@@ -171,11 +171,15 @@ module RSpec
           expect { T.let(class_double(Rectangle), Rectangle) }.to raise_error(TypeError)
           expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error
           expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.to raise_error(TypeError)
+          expect { T.let(Rectangle, T.nilable(T.class_of(Rectangle))) }.not_to raise_error
+          expect { T.let(class_double(Rectangle), T.nilable(T.class_of(Rectangle))) }.to raise_error(TypeError)
           subject
           expect { T.let(Rectangle, Rectangle) }.to raise_error(TypeError)
           expect { T.let(class_double(Rectangle), Rectangle) }.to raise_error(TypeError)
           expect { T.let(Rectangle, T.class_of(Rectangle)) }.not_to raise_error
           expect { T.let(class_double(Rectangle), T.class_of(Rectangle)) }.not_to raise_error
+          expect { T.let(Rectangle, T.nilable(T.class_of(Rectangle))) }.not_to raise_error
+          expect { T.let(class_double(Rectangle), T.nilable(T.class_of(Rectangle))) }.not_to raise_error
         end
 
         specify 'method signatures' do
