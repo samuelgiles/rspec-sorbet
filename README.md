@@ -1,3 +1,5 @@
+**N.B. The Bellroy technology team are transitioning away from Ruby as their primary programming language, and will not longer actively update this repository. Contact us if you'd like to take over as the primary maintainer.**
+
 ![rspec-sorbet](https://user-images.githubusercontent.com/2643026/63100456-02c12c00-bf6f-11e9-8430-630a27bc6e42.png)
 
 # RSpec Sorbet [![Gem Version](https://badge.fury.io/rb/rspec-sorbet.svg)](https://badge.fury.io/rb/rspec-sorbet) ![CI Badge](https://github.com/tricycle/rspec-sorbet/workflows/Continuous%20Integration/badge.svg)
