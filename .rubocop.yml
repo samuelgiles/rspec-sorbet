@@ -1,66 +1,22 @@
----
-Documentation:
-  Enabled: false
-Rails:
-  Enabled: true
+inherit_gem:
+  rubocop-shopify: rubocop.yml
+require: rubocop-rspec
+
 AllCops:
-  Include:
-  - app/**/*.rb
-  - lib/**/*.rb
-  - spec/**/*.rb
-  Exclude:
-  - app/assets/**/*
-  - bin/**/*
-  - client/node_modules/**/*
-  - config/**/*
-  - coverage/**/*
-  - data/**/*
-  - db/**/*
-  - db_*/**/*
-  - dw/**/*
-  - log/**/*
-  - phrase/**/*
-  - public/**/*
-  - tmp/**/*
-  - vendor/**/*
-  TargetRubyVersion: 2.5
-Metrics/LineLength:
-  Max: 100
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
-Style/PercentLiteralDelimiters:
-  PreferredDelimiters:
-    "%w": "[]"
+  NewCops: disable
+  SuggestExtensions: false
+
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
 RSpec/ExampleLength:
   Enabled: false
-  Max: 10
+
+RSpec/NamedSubject:
+  Enabled: false
+
 RSpec/MultipleExpectations:
   Enabled: false
-  Max: 10
-RSpec/NestedGroups:
-  Enabled: false
-  Max: 10
-RSpec/MessageExpectation:
-  Enabled: false
-RSpec/MissingExampleGroupArgument:
-  Enabled: false
-require:
-- rubocop-performance
-- rubocop-rspec
-- test_prof/rubocop
-Metrics/BlockLength:
-  Enabled: false
-RSpec/MessageSpies:
-  Enabled: false
-RSpec/ExpectInHook:
-  Enabled: false
-RSpec/AggregateFailures:
-  Enabled: true
-  Include:
-  - spec/**/*.rb
-Rails/InverseOf:
-  Enabled: false
-Rails/Present:
-  Enabled: false
-Rails/TimeZone:
+
+RSpec/VerifiedDoubles:
   Enabled: false

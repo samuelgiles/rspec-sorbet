@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Rubocop offenses resolved
+
 ## 1.9.1
 
 - Support `T.nilable(T.class_of(...))` among others (thanks [@deecewan](https://github.com/deecewan))
