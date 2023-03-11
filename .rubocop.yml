@@ -1,0 +1,18 @@
+inherit_gem:
+  rubocop-shopify: rubocop.yml
+require: rubocop-rspec
+
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
