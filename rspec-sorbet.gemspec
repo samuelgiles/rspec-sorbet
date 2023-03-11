@@ -9,10 +9,10 @@ Gem::Specification.new do |spec|
   spec.name          = "rspec-sorbet"
   spec.version       = RSpec::Sorbet::VERSION
   spec.authors       = ["Samuel Giles"]
-  spec.email         = ["samuel.giles@bellroy.com"]
+  spec.email         = ["sam@samuelgil.es"]
 
   spec.summary       = "A small gem consisting of helpers for using Sorbet & RSpec together."
-  spec.homepage      = "https://github.com/tricycle/rspec-sorbet"
+  spec.homepage      = "https://github.com/samuelgiles/rspec-sorbet"
   spec.license       = "MIT"
 
   # Specify which files should be added to the gem when it is released.
