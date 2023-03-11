@@ -2,3 +2,5 @@
 .
 --ignore
 vendor
+--disable-watchman
+--enable-experimental-requires-ancestor

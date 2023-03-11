@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Rubocop offenses resolved
+- Sorbet signatures added to `RSpec::Sorbet::Doubles`
 
 ## 1.9.1
 
