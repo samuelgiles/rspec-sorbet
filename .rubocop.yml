@@ -4,6 +4,7 @@ require: rubocop-rspec
 
 AllCops:
   NewCops: disable
+  SuggestExtensions: false
 
 RSpec/LeakyConstantDeclaration:
   Enabled: false
