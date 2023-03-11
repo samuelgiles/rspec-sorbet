@@ -17,5 +17,5 @@ end
 
 group :test do
   gem 'ffaker'
-  gem 'simplecov'
+  gem 'rspec-github', require: false
 end
