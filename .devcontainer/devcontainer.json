@@ -1,0 +1,5 @@
+{
+	"name": "Ruby",
+	"image": "mcr.microsoft.com/devcontainers/ruby:0-3.1",
+	"postCreateCommand": "bin/setup"
+}
