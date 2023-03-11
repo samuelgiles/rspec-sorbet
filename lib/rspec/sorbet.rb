@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require 'rspec/sorbet/doubles'
+require "rspec/sorbet/doubles"
 
 module RSpec
   module Sorbet

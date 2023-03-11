@@ -2,6 +2,9 @@ inherit_gem:
   rubocop-shopify: rubocop.yml
 require: rubocop-rspec
 
+AllCops:
+  NewCops: disable
+
 RSpec/LeakyConstantDeclaration:
   Enabled: false
 
