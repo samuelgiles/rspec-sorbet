@@ -10,9 +10,15 @@ module RSpec
       extend T::Helpers
 
       requires_ancestor { Kernel }
+      
+      class <<self
+        attr_accessor :defined
+      end
 
       sig { void }
       def allow_doubles!
+        return if RSpec::Sorbet::Doubles.defined
+        
         T::Configuration.inline_type_error_handler = proc do |error|
           inline_type_error_handler(error)
         end
@@ -25,6 +31,8 @@ module RSpec
         T::Configuration.call_validation_error_handler = proc do |signature, opts|
           call_validation_error_handler(signature, opts)
         end
+        
+        RSpec::Sorbet::Doubles.defined = true
       end
 
       alias_method :allow_instance_doubles!, :allow_doubles!
