@@ -120,8 +120,7 @@ module RSpec
     end
 
     after do
-      T::Configuration.inline_type_error_handler = nil
-      T::Configuration.call_validation_error_handler = nil
+      described_class.reset!(clear_existing: true)
     end
 
     describe ".allow_instance_doubles!" do
@@ -153,10 +152,27 @@ module RSpec
         end
       end
 
-      describe "with an existing error handler" do
+      describe "with an existing inline type error handler" do
+        let(:handler) { proc { |_| raise ArgumentError, "foo" } }
+
+        before do
+          described_class.reset!(clear_existing: true)
+          T::Configuration.inline_type_error_handler = handler
+          described_class.allow_doubles!
+        end
+
+        include_context "with instance doubles"
+
+        specify do
+          expect { Greeter.new(my_person_double).greet }.to(raise_error(ArgumentError, "foo"))
+        end
+      end
+
+      describe "with an existing call validation error handler" do
         let(:handler) { proc { |_, _| raise ArgumentError, "foo" } }
 
         before do
+          described_class.reset!(clear_existing: true)
           T::Configuration.call_validation_error_handler = handler
           described_class.allow_doubles!
         end
