@@ -139,6 +139,20 @@ module RSpec
         it_behaves_like "it allows an instance double"
       end
 
+      describe "when called multiple times" do
+        before do
+          described_class.allow_doubles!
+          described_class.allow_doubles!
+        end
+
+        include_context "with instance doubles"
+
+        specify do
+          expect { Greeter.new(123) }.to(raise_error(TypeError))
+          expect { Greeter.new(my_person_double).greet }.not_to(raise_error)
+        end
+      end
+
       describe "with an existing error handler" do
         let(:handler) { proc { |_, _| raise ArgumentError, "foo" } }
 
