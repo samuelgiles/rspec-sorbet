@@ -13,23 +13,56 @@ module RSpec
 
       sig { void }
       def allow_doubles!
+        reset! if configured
+
+        self.existing_inline_type_error_handler = T::Configuration.instance_variable_get(
+          :@inline_type_error_handler,
+        )
         T::Configuration.inline_type_error_handler = proc do |error|
           inline_type_error_handler(error)
         end
 
-        @existing_handler = T.let(
-          T::Configuration.instance_variable_get(:@call_validation_error_handler),
-          T.nilable(T.proc.params(signature: T.untyped, opts: T::Hash[T.untyped, T.untyped]).void),
+        self.existing_call_validation_error_handler = T::Configuration.instance_variable_get(
+          :@call_validation_error_handler,
         )
-
         T::Configuration.call_validation_error_handler = proc do |signature, opts|
           call_validation_error_handler(signature, opts)
         end
+
+        self.configured = true
+      end
+
+      sig { params(clear_existing: T::Boolean).void }
+      def reset!(clear_existing: false)
+        if clear_existing
+          self.existing_inline_type_error_handler = nil
+          self.existing_call_validation_error_handler = nil
+        end
+
+        T::Configuration.instance_variable_set(
+          :@inline_type_error_handler,
+          existing_inline_type_error_handler,
+        )
+        T::Configuration.instance_variable_set(
+          :@call_validation_error_handler,
+          existing_call_validation_error_handler,
+        )
+
+        self.configured = false
       end
 
       alias_method :allow_instance_doubles!, :allow_doubles!
 
       private
+
+      sig { returns(T.nilable(T.proc.params(signature: Exception).void)) }
+      attr_accessor :existing_inline_type_error_handler
+
+      sig { returns(T.nilable(T.proc.params(signature: T.untyped, opts: T::Hash[T.untyped, T.untyped]).void)) }
+      attr_accessor :existing_call_validation_error_handler
+
+      sig { returns(T.nilable(T::Boolean)) }
+      attr_accessor :configured
 
       # rubocop:disable Layout/LineLength
       INLINE_DOUBLE_REGEX =
@@ -38,9 +71,9 @@ module RSpec
 
       sig { params(signature: T.untyped, opts: T.untyped).void }
       def handle_call_validation_error(signature, opts)
-        raise TypeError, opts[:pretty_message] unless @existing_handler
+        raise TypeError, opts[:pretty_message] unless @existing_call_validation_error_handler
 
-        @existing_handler.call(signature, opts)
+        @existing_call_validation_error_handler.call(signature, opts)
       end
 
       sig { params(error: Exception).void }
@@ -77,6 +110,8 @@ module RSpec
         else
           raise error
         end
+
+        existing_inline_type_error_handler&.call(error)
       end
 
       sig { params(message: String).returns(T::Boolean) }
