@@ -1,12 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.9.2
 
 - Rubocop offenses resolved
 - Sorbet signatures added to `RSpec::Sorbet::Doubles`
 - Added `RSpec::Sorbet.reset!` to restore handlers to previous state
 - Added fix to prevent `SystemStackError` by keeping track of when handlers have been configured. (thanks [@alex-tan](https://github.com/alex-tan))
 - Added logic to pass type error onwards to existing inline type error handler.
+- Slimmed down Gem RBIs to minimum needed for `srb tc` to pass in development.
 
 ## 1.9.1
 
