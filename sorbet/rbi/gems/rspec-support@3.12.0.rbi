@@ -194,9 +194,6 @@ module RSpec::Support
     def require_rspec_matchers(f); end
 
     # source://rspec-support//lib/rspec/support.rb#23
-    def require_rspec_mocks(f); end
-
-    # source://rspec-support//lib/rspec/support.rb#23
     def require_rspec_support(f); end
 
     # gives a string representation of an object for use in RSpec descriptions
